@@ -1,0 +1,208 @@
+# NOTE: This file is managed via Puppet.
+# manual changes will be overwritten.
+
+[service]
+# enable this spectrum instance
+<% if @enable -%>
+enable=1
+<% else -%>
+enable=0
+<% end -%>
+
+
+# one of: aim, facebook, gg, icq, irc, msn, myspace, qq, simple, xmpp, yahoo
+protocol=<%= @protocol %>
+
+# component ip
+server=<%= @server %>
+
+# if use_proxy is 1, the http_proxy env var will be used as the proxy server
+# for example export http_proxy="http://user:passwd@your.proxy.server:port/"
+<% if @use_proxy -%>
+use_proxy=1
+<% else -%>
+use_proxy=0
+<% end -%>
+
+# component JID
+jid=<%= @jid %>
+
+# component secret
+password=<%= @password %>
+
+# component port
+port=<%= @port %>
+
+config_interface = <%= @config_interface %>
+
+# IP:port where filetransfer proxy binds to. This has to be public IP.
+<% if @filetransfer_bind_address -%>
+filetransfer_bind_address=<%= @filetransfer_bind_address %>
+<% else -%>
+#filetransfer_bind_address=192.0.2.1:12345
+<% end -%>
+
+# IP:port which will be sent in filetransfer request as stream host.
+<% if @filetransfer_public_address -%>
+filetransfer_public_address=<%= @filetransfer_public_address %>
+<% end -%>
+
+# admin JIDs - Jabber IDs of transport administrators who have access to admin adhoc commands
+# separated by semicolons
+<% if @admins -%>
+admins=<%= @admins %>
+<% end -%>
+
+# directory where downloaded files will be saved
+filetransfer_cache=<%= @filetransfer_cache %>
+
+# URL used to acces filestransfer_cache directory from the web.
+filetransfer_web=<%= @filetransfer_web %>
+
+# if filetransfer_force_cache_storage is 1, files received from legacy networks
+# are always stored on server and link is sent to XMPP user
+<% if @filetransfer_force_cache_storage -%>
+filetransfer_force_cache_storage=1
+<% else -%>
+filetransfer_force_cache_storage=0
+<% end -%>
+
+# name of transport (this will appear in service discovery)
+name=<%= @name %>
+
+# default language
+language=<%= @language %>
+
+# if vip_mode is 1, users are divided to 2 groups according to 'vip' database field
+<% if @vip_mode -%>
+vip_mode=1
+<% else -%>
+vip_mode=0
+<% end -%>
+
+# if vip_mode is 1, you can set transport to be availabe only for VIP users by setting only_for_vip to 1.
+<% if @only_for_vip -%>
+only_for_vip=1
+<% else -%>
+only_for_vip=0
+<% end -%>
+
+# if vip_mode is 1 and only_for_vip is 1, users can connect from these servers even they are not VIP.
+# This feature is useful, if you want to enable transport only for users from your server, but also want
+# to give access to VIP users from other servers (for example from GTalk)
+# seperated by semicolons
+allowed_servers=<%= @allowed_servers %>
+
+# pid file
+pid_file=<%= @pid_file %>
+
+# require_tls to connect legacy network
+require_tls=<%= @require_tls %>
+
+
+# Eventloop used by Spectrum. Allows to change default use of poll to epoll,
+# which should be faster and handles more connections better.
+# WARNING: some 3rd party libpurple protocol plugins are not prepared to be
+# used with different eventloop, but protocols included in libpurple by default
+# works OK.
+#eventloop=glib
+<% if @eventloop -%>
+eventloop=<%= @eventloop %>
+<% end -%>
+
+[registration]
+# Set to 0 to disable transport registration to everyone except
+# people from host from allowed_servers list.
+<% if @registration_enable_public_registration -%>
+enable_public_registration=1
+<% else -%>
+enable_public_registration=0
+<% end -%>
+
+# You can override username registered by transport user. This is useful
+# for example if you want to let users to register only their Facebook name
+# and internally connect them to facebook_name@chat.facebook.com.
+# $username variable is replaced by username which has been registered
+# by particular user. 
+<% if @registration_username_mask -%>
+username_mask = <%= @registration_username_mask %>
+<% end -%>
+
+# This option allows you to white-list newly created accounts according
+# to regexp. for example allowed_usernames=*.\.gmail\.com$ will allow only
+# GTalk users to register. If you use username_mask, then username_mask is
+# applied before this option.
+<% if @registration_allowed_usernames -%>
+allowed_usernames=<%= @registration_allowed_usernames %>
+<% end -%>
+
+# Label used to described username field in registration form
+<% if @registration_username_label -%>
+username_label = <%= @registration_username_label %>
+<% end -%>
+
+# This variable overrides default instructions text in registration form.
+<% if @registration_instructions -%>
+instructions = <%= @registration_instructions %>
+<% end -%>
+
+# Used to configure extra fields which are visible in transport registration.
+# separated by semicolons.
+# Currently only "encoding" is supported.
+# set "extra_fields=" to disable encoding in registration form.
+<% if @registration_extra_fields -%>
+extra_fields=<%= @registration_extra_fields %>
+<% end -%>
+
+# Transport features, all features are enabled by default.
+[features]
+filetransfer=<%= @features_filetransfer %>
+avatars=<%= @features_avatars %>
+chatstates=<%= @features_chatstates %>
+statistics=<%= @features_statistics %>
+
+# Transport features for VIP users, all features are enabled by default.
+[vip-features]
+filetransfer=<%= @vip_features_filetransfer %>
+avatars=<%= @vip_features_avatars %>
+chatstates=<%= @vip_features_chatstates %>
+statistics=<%= @vip_features_statistics %>
+
+[logging]
+# log file, needs to be unique for each spectrum instance
+log_file=<%= @log_file %>
+
+# log areas
+# combination of: xml, purple
+log_areas=<%= @log_areas %>
+
+[database]
+# mysql or sqlite
+type=<%= @database_type %>
+
+# hostname (not needed for sqlite)
+<% if @database_host -%>
+host=<%= @database_host %>
+<% end -%>
+
+# username (not needed for sqlite)
+<% if @database_user -%>
+user=<%= @database_user %>
+<% end -%>
+
+# password (not needed for sqlite)
+<% if @database_password -%>
+password=<%= @database_password %>
+<% end -%>
+# sqlite: set path to database file here
+# mysql: set to name of database
+database=<%= @database %>
+# table prefix for multiple transport instances sharing the same database
+<% if @database_prefix -%>
+prefix=<%= @database_prefix %>
+<% end -%>
+
+[purple]
+# avatar, vcard, roster storage
+# needs to be unique for each spectrum instance
+userdir=<%= @purple_userdir %>
