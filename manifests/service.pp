@@ -1,3 +1,6 @@
+# Private class, do not use directly.
+# Takes care about service management.
+
 class spectrum::service (
   $service_ensure,
   $service_enable,
