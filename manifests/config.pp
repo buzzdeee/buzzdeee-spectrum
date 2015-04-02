@@ -54,6 +54,7 @@ define spectrum::config (
     group   => '_spectrum',
     mode    => '0640',
     content => template('spectrum/spectrum.cfg.erb'),
+    require => Package['spectrum'],
     notify  => Service['spectrum'],
   }
 }
